@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+    <head>
+        <title>jQuery.Gantt - Test Suite 01</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=IE8">
+        <link href="../css/style.css" type="text/css" rel="stylesheet">
+        <style type="text/css">
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 13px;
+                padding: 0 0 50px 0;
+            }
+            .contain {
+                width: 800px;
+                margin: 0 auto;
+            }
+            h1 {
+                margin: 40px 0 20px 0;
+            }
+            h2 {
+                font-size: 1.5em;
+                padding-bottom: 3px;
+                border-bottom: 1px solid #DDD;
+                margin-top: 50px;
+                margin-bottom: 25px;
+            }
+            table th:first-child {
+                width: 150px;
+            }
+        </style>
+        
+        
+        <!--[if IE]><script type="text/javascript" src="html5jp/excanvas/excanvas.js"></script><![endif]-->
+		<script type="text/javascript" src="html5jp/graph/line.js"></script>
+		
+        
+		<script src="../js/jquery.min.js"></script>
+    	<script src="../js/jquery.fn.gantt.js"></script>
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    	
+    	
+</head>
+<body>
+
+        <div class="contain">
+
+
+
+
+            <div class="gantt"></div>
+
+
+    
+    <script>
+    
+    	
+			function cstamp(hour) {
+      			var st =Date.parse( hour );
+				var st2 = "/Date(" + st + ")/";
+				return (st2)
+  			}
+
+			function graph() {
+				obj = document.test.linkselect;
+				index = obj.selectedIndex;
+  				var form = obj.options[index].value;
+  				alert(form);
+  				
+  				var lg = new html5jp.graph.line("sample");
+  				if( ! lg ) { return; }
+  				var items = [
+    				["商品A", 20, 58, 40, 14, 38, 20, 40],
+    				["商品B", 10, 14, 58, 80, 70, 90, 20]
+  				];
+  				lg.draw(items);
+			};
+			
+			function kakunin(){
+  				obj = document.test.linkselect;
+
+  				index = obj.selectedIndex;
+  				alert(obj.options[index].value);
+			}
+			
+			var c,d,e,f;
+			var date = [];
+			var data = [];
+        	var extra = {
+                			source: [],
+                			scale: "days",
+                			maxScale: "years",
+                			minScale: "weeks",
+                			navigate: "scroll",
+                			months : ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                			itemsPerPage: 10,
+                			dow : ["日", "月", "火", "水", "木", "金", "土"]
+                			
+            };
+            var start,end;
+            var flag = 0;
+            var source;
+            var name = [];
+        	<!--ファイル読み込み-->
+        	window.addEventListener('DOMContentLoaded', function() {
+			// ファイルが指定されたタイミングで、その内容を表示
+			document.querySelector("#file").addEventListener('change', function(e) {
+    		// File APIを利用できるかをチェック
+    			if (window.File) {
+      				<!-- 指定されたファイルを取得-->
+      				var input = document.querySelector('#file').files[0];
+      				<!--ファイル読み込みの準備-->
+      				var reader = new FileReader();
+      				<!--ファイルの読み込み成功後の処理-->
+      				reader.addEventListener('load', function(e) {
+        				var output = reader.result;
+        				
+        				date = output.split("\r\n");
+        				date = date.join(",");
+        				date = date.split(",");
+        				for (i = 0; i < date.length; ) {
+    						start = cstamp(date[i+2],date[i+3]);
+        					end =cstamp(date[i+4],date[i+5]);
+        					name.push(date[i]);
+        					data = {
+        								name: date[i],
+        								desc: date[i+1],
+        								values: [
+        											{
+        												from:  start,
+        												to: end,
+        												label: date[i+6],
+        												customClass: date[i+7]
+        											}
+        										]
+        							};
+							source = extra["source"];
+        					for (j = 0; j<source.length; j++){
+        							if (data["name"] == (source[j])["name"]){
+        								
+        									data["name"] = " ";
+        									source=source.splice(j+1,0,data);
+        									flag = 1;
+        								
+        							}
+        					}
+        					
+        					
+        					if (flag != 0){
+        						flag = 0;
+        					} else {
+        						source.push(data);
+        					}
+        					i = i+8;
+        					
+        				}
+        				
+        			}, true);
+      				// ファイルの内容をテキストとして取得（3）
+      				reader.readAsText(input, 'shift-jis');
+      				
+    				}
+    			$(function() {
+		        		$(".gantt").gantt(extra); 
+        				});
+  				}, true);
+			});
+			<!---ファイル読み込み終わり-->
+			
+            
+			
+			
+            
+            function printProperties(obj) {
+    			var properties = '';
+    			for (var prop in obj){
+        			properties += prop + "=" + obj[prop] + "\n";
+    			}
+    			alert(properties);
+			}
+			
+			
+			var aaa=document.getElementById("aaa");
+        				var name=prompt("What is your name?");
+						var text=document.createTextNode("Hi&nbsp;"+name+" ! ");
+						aaa.appendChild(text);
+    </script>
+	
+
+        
+        ファイル：
+        <input id="file" name="file" type="file" />
+        <!--グラフ-->
+        <div><canvas width="400" height="300" id="sample"></canvas></div>
+        <form name="test">
+			<select name="linkselect" onChange="graph()">
+				<option value="">選択して下さい</option>
+				<option value=name[0]>Yahoo!Japan</option>
+				<option value="http://www.google.co.jp/">Google</option>
+			</select>
+		</form>
+</div>
+
+
+</body>
+</html>
+
+<!--
+
+				function handleDownload() {
+            
+                var content1 = document.forms.id_form.id_name.value;
+                var content2 = document.forms.id_form.id_task.value;
+                var content3 = document.forms.id_form.id_std.value;
+                var content4 = document.forms.id_form.id_stt.value;
+                var content5 = document.forms.id_form.id_endd.value;
+                var content6 = document.forms.id_form.id_endt.value;
+                
+                var blob = new Blob([content1+",",content2+",",content3+",",content4+",",content5+",",content6], { "type" : "text/plain" });
+
+                if (window.navigator.msSaveBlob) { 
+                    window.navigator.msSaveBlob(blob, moment()+".txt"); 
+
+                    window.navigator.msSaveOrOpenBlob(blob, moment()+".txt"); 
+                } else {
+                
+                    document.getElementById("download").href = window.URL.createObjectURL(blob);
+                }
+            }
+
+-->
