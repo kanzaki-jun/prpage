@@ -28,9 +28,12 @@
                 width: 150px;
             }
         </style>
-	
+		<script src="../js/jquery.min.js"></script>
+    	<script src="../js/jquery.fn.gantt.js"></script>
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 </head>
 <body>
+
         <div class="contain">
 
 
@@ -39,9 +42,7 @@
             <div class="gantt"></div>
 
 
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/jquery.fn.gantt.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    
     <script>
 			function cstamp(hour) {
       			var st =Date.parse( hour );
@@ -69,6 +70,9 @@
             var start,end;
             var flag = 0;
             var source;
+            var gdata = [];
+            var timepro;
+            var times,timee,result1,result2;
         	<!--ファイル読み込み-->
         	window.addEventListener('DOMContentLoaded', function() {
 			// ファイルが指定されたタイミングで、その内容を表示
@@ -86,11 +90,11 @@
         				date = output.split("\r\n");
         				date = date.join(",");
         				date = date.split(",");
-        				
         				for (i = 0; i < date.length; ) {
     						start = cstamp(date[i+2],date[i+3]);
         					end =cstamp(date[i+4],date[i+5]);
         					data = {name: date[i],desc: date[i+1],values: [{from:  start,to: end,label: date[i+6],customClass: date[i+7]}]};
+        					
 							source = extra["source"];
         					for (j = 0; j<source.length; j++){
         							if (data["name"] == (source[j])["name"]){
@@ -99,13 +103,28 @@
         								flag = 1;
         							}
         					}
+        					
+        					times = date[i+2].replace(/\u002f/g,"-");
+        					timee = date[i+4].replace(/\u002f/g,"-");
+        					result1 = moment(times) ;
+        					result2 = moment(timee) ;
+        					
+        					
+        					for(n=0; moment(timepro).isSame(result2)==true; n++){
+        						timepro = result1.add(n, "days").format("YYYY-MM-DD");
+        						gdata.push(timepro); 
+        						alert(gdata);
+        					}
+        				
         					if (flag == 1){
         						flag = 0;
         					} else {
         						source.push(data);
         					}
         					i = i+8;
+        					
         				}
+        				
         			}, true);
       				// ファイルの内容をテキストとして取得（3）
       				reader.readAsText(input, 'shift-jis');
@@ -120,7 +139,29 @@
 			
             
 	
-			function handleDownload() {
+			
+            
+            function printProperties(obj) {
+    			var properties = '';
+    			for (var prop in obj){
+        			properties += prop + "=" + obj[prop] + "\n";
+    			}
+    			alert(properties);
+			}
+			
+    </script>
+	
+
+        
+        ファイル：
+        <input id="file" name="file" type="file" />
+</div>
+</body>
+</html>
+
+<!--
+
+				function handleDownload() {
             
                 var content1 = document.forms.id_form.id_name.value;
                 var content2 = document.forms.id_form.id_task.value;
@@ -140,20 +181,14 @@
                     document.getElementById("download").href = window.URL.createObjectURL(blob);
                 }
             }
-            
-            function printProperties(obj) {
-    			var properties = '';
-    			for (var prop in obj){
-        			properties += prop + "=" + obj[prop] + "\n";
-    			}
-    			alert(properties);
-			}
-    </script>
-	
 
-        
-        ファイル：
-        <input id="file" name="file" type="file" />
-</div>
-</body>
-</html>
+
+
+							var times = date[i+2];
+        					var timee = date[i+4]; 
+        					var result1 = value.times( /\u002f/g , "-" ) ;
+        					var result2 = value.timee( /\u002f/g , "-" ) ;
+        					
+        					alert(result1);
+        					alert(result2);
+-->

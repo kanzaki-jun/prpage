@@ -99,7 +99,7 @@
             var start,end;
             var flag = 0;
             var source;
-            var name = [];
+            var name;
         	<!--ファイル読み込み-->
         	window.addEventListener('DOMContentLoaded', function() {
 			// ファイルが指定されたタイミングで、その内容を表示
@@ -137,14 +137,21 @@
         					for (j = 0; j<source.length; j++){
         							if (data["name"] == (source[j])["name"]){
         								
-        									data["name"] = " ";
         									source=source.splice(j+1,0,data);
         									flag = 1;
         								
         							}
         					}
         					
+        					<!--
+        					var times = date[i+2];
+        					var timee = date[i+4]; 
+        					var result1 = value.times( /\u002f/g , "-" ) ;
+        					var result2 = value.timee( /\u002f/g , "-" ) ;
         					
+        					alert(result1);
+        					alert(result2);
+        					-->
         					if (flag != 0){
         						flag = 0;
         					} else {
@@ -179,10 +186,7 @@
 			}
 			
 			
-			var aaa=document.getElementById("aaa");
-        				var name=prompt("What is your name?");
-						var text=document.createTextNode("Hi&nbsp;"+name+" ! ");
-						aaa.appendChild(text);
+			
     </script>
 	
 
